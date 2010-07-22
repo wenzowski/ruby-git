@@ -33,7 +33,7 @@ class TestBranch < Test::Unit::TestCase
     b = @git.branches[:test_object]
     assert_equal('test_object', b.name)
 
-    b = @git.branches['working/master']
+    b = @git.branches['remotes/working/master']
     assert_equal('master', b.name)
     assert_equal('working/master', b.full)
     assert_equal('working', b.remote.name)

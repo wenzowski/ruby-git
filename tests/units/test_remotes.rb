@@ -46,6 +46,7 @@ class TestRemotes < Test::Unit::TestCase
     in_temp_dir do |path|
       loc = Git.clone(@wbare, 'local')
       rem = Git.clone(@wbare, 'remote')
+      rem.config('receive.denyCurrentBranch', 'ignore')
         
       r = loc.add_remote('testrem', rem)
 

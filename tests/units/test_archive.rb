@@ -46,7 +46,7 @@ class TestArchive < Test::Unit::TestCase
     in_temp_dir do
       c = Git.clone(@wbare, 'new')
       c.chdir do
-        f = @git.remote('origin').branch('master').archive(tempfile, :format => 'tgz')
+        f = c.remote('origin').branch('master').archive(tempfile, :format => 'tgz')
         assert(File.exists?(f))
       end
     end

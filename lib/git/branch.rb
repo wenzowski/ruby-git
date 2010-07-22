@@ -5,12 +5,12 @@ module Git
     
     def initialize(base, name)
       @remote = nil
-      @full = name
+      @full = name.sub(/\Aremotes\//, '')
       @base = base
       @gcommit = nil
       @stashes = nil
       
-      parts = name.split('/')
+      parts = @full.split('/')
       if parts[1]
         @remote = Git::Remote.new(@base, parts[0])
         @name = parts[1]
@@ -34,7 +34,7 @@ module Git
     end
     
     def archive(file, opts = {})
-      @base.lib.archive(@full, file, opts)
+      @base.lib.archive(@name, file, opts.merge(:remote => @remote))
     end
     
     # g.branch('new_branch').in_branch do
