@@ -1,4 +1,16 @@
 require 'tempfile'
+require 'shellwords'
+
+class String  # :nodoc:
+  def shellescape
+    return "''" if empty?
+
+    str = dup
+    str.gsub!(/([^A-Za-z0-9_\-.,:\/@\n])/n, "\\\\\\1")
+    str.gsub!(/\n/, "'\n'")
+    str
+  end
+end unless ''.respond_to?(:shellescape)
 
 module Git
   
@@ -711,8 +723,7 @@ module Git
     end
 
     def escape(s)
-      escaped = s.to_s.gsub('\'', '\'\\\'\'')
-      %Q{"#{escaped}"}
+      s.to_s.shellescape
     end
 
   end
