@@ -4,10 +4,10 @@ module Git
   class Diff
     include Enumerable
     
-    def initialize(base, from = nil, to = nil)
+    def initialize(base, from = 'HEAD', to = nil)
       @base = base
       @from = from.to_s
-      @to = to.to_s
+      @to = to && to.to_s
 
       @path = nil
       @full_diff = nil
@@ -44,6 +44,11 @@ module Git
     def stats
       cache_stats
       @stats
+    end
+
+    def index_stats
+      cache_index_stats
+      @index_stats
     end
     
     # if file is provided and is writable, it will write the patch into the file
@@ -111,6 +116,12 @@ module Git
       def cache_stats
         unless @stats
           @stats = @base.lib.diff_stats(@from, @to, {:path_limiter => @path})
+        end
+      end
+
+      def cache_index_stats
+        unless @index_stats
+          @index_stats = @base.lib.diff_index_stats(@from, {:path_limiter => @path})
         end
       end
       

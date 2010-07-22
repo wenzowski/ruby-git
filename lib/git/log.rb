@@ -79,6 +79,10 @@ module Git
       check_log
       @commits.size rescue nil
     end
+
+    def empty?
+      size.zero? rescue true
+    end
     
     def each(&block)
       check_log

@@ -261,7 +261,7 @@ module Git
       command('diff', diff_opts)
     end
     
-    def diff_stats(obj1 = 'HEAD', obj2 = nil, opts = {})
+    def _diff_stats(diff_cmd = 'diff', obj1 = 'HEAD', obj2 = nil, opts = {})
       diff_opts = ['--numstat']
       diff_opts << obj1
       diff_opts << obj2 if obj2.is_a?(String)
@@ -269,7 +269,7 @@ module Git
 
       hsh = {:total => {:insertions => 0, :deletions => 0, :lines => 0, :files => 0}, :files => {}}
       
-      command_lines('diff', diff_opts).each do |file|
+      command_lines(diff_cmd, diff_opts).each do |file|
         (insertions, deletions, filename) = file.split("\t")
         hsh[:total][:insertions] += insertions.to_i
         hsh[:total][:deletions] += deletions.to_i
@@ -279,6 +279,16 @@ module Git
       end
             
       hsh
+    end
+
+    private :_diff_stats
+
+    def diff_stats(obj1 = 'HEAD', obj2 = nil, opts = {})
+      _diff_stats('diff', obj1, obj2, opts)
+    end
+
+    def diff_index_stats(treeish = 'HEAD', opts = {})
+      _diff_stats('diff-index', treeish, nil, opts)
     end
 
     # compares the index and the working directory
@@ -438,7 +448,9 @@ module Git
     def reset(commit, opts = {})
       arr_opts = []
       arr_opts << '--hard' if opts[:hard]
+      arr_opts << '--quiet' if opts[:quiet]
       arr_opts << commit if commit
+      arr_opts << '--' << opts[:path_limiter] if opts[:path_limiter].is_a? String
       command('reset', arr_opts)
     end
     
@@ -622,6 +634,7 @@ module Git
     def checkout_index(opts = {})
       arr_opts = []
       arr_opts << "--prefix=#{opts[:prefix]}" if opts[:prefix]
+      arr_opts << "--index" if opts[:index]
       arr_opts << "--force" if opts[:force]
       arr_opts << "--all" if opts[:all]
       arr_opts << '--' << opts[:path_limiter] if opts[:path_limiter].is_a? String
