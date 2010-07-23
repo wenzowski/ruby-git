@@ -334,6 +334,14 @@ module Git
       command_lines('ls-files', ['--others', '-i', '--exclude-standard'])
     end
 
+    def untracked_files(path_limiter = nil)
+      arr_opts = ['--short', '--untracked=all']
+      arr_opts << '--' << path_limiter if path_limiter.is_a? String
+
+      command_lines('status', arr_opts).map { |line|
+        line.sub!(/\A\?\?\s/, '')
+      }.compact
+    end
 
     def config_remote(name)
       hsh = {}

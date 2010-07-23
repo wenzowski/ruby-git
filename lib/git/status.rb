@@ -81,12 +81,11 @@ module Git
     
       def construct_status
         @files = @base.lib.ls_files
-        ignore = @base.lib.ignored_files
         
         # find untracked in working dir
         Dir.chdir(@base.dir.path) do
-          Dir.glob('**/*') do |file|
-            @files[file] = {:path => file, :untracked => true} unless @files[file] || File.directory?(file) || ignore.include?(file)
+          @base.lib.untracked_files.each do |file|
+            @files[file] = {:path => file, :untracked => true} unless @files[file] || File.directory?(file)
           end
         end
         
