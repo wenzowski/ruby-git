@@ -237,13 +237,16 @@ module Git
       grep_opts = ['-n']
       grep_opts << '-i' if opts[:ignore_case]
       grep_opts << '-v' if opts[:invert_match]
-      grep_opts << '-e'
-      grep_opts << string
+      grep_opts << '-l' if opts[:name_only]
+      grep_opts << '-e' << string
       grep_opts << opts[:object] if opts[:object].is_a?(String)
       grep_opts << '--' << opts[:path_limiter] if opts[:path_limiter].is_a? String
 
+      matches = command_lines('grep', grep_opts)
+      return matches if opts[:name_only]
+
       hsh = {}
-      command_lines('grep', grep_opts).each do |line|
+      matches.each do |line|
         if m = /(.*)\:(\d+)\:(.*)/.match(line)        
           hsh[m[1]] ||= []
           hsh[m[1]] << [m[2].to_i, m[3]] 
@@ -580,6 +583,10 @@ module Git
     
     def fetch(remote)
       command('fetch', remote)
+    end
+
+    def pull(remote, branch = 'master')
+      command('pull', [remote, branch])
     end
     
     def push(remote, branch = 'master', tags = false)

@@ -324,6 +324,10 @@ module Git
       fetch(remote)
       merge(branch, message)
     end
+
+    def pullpull(remote = 'origin', branch = 'master')
+      lib.pull(remote, branch)
+    end
     
     # returns an array of Git:Remote objects
     def remotes
