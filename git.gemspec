@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.date = %q{2009-10-17}
   s.email = %q{schacon@gmail.com}
   s.extra_rdoc_files = [
-    "README"
+    "README.md"
   ]
   s.files = [
     "lib/git.rb",
