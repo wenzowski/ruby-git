@@ -17,6 +17,7 @@ module Git
       @since = nil
       @skip = nil
       @until = nil
+      @all = nil
       @between = nil
     end
 
@@ -93,6 +94,12 @@ module Git
       check_log
       @commits.first rescue nil
     end
+
+    def all
+      dirty_log
+      @all = true
+      return self
+    end
     
     private 
     
@@ -111,8 +118,9 @@ module Git
       def run_log      
         log = @base.lib.full_log_commits(:count => @count, :object => @object, 
                                     :path_limiter => @path, :since => @since, 
-                                    :author => @author, :grep => @grep, :skip => @skip,
-                                    :until => @until, :between => @between)
+                                    :author => @author, :grep => @grep, 
+                                    :skip => @skip, :until => @until, 
+                                    :between => @between, :all => @all)
         @commits = log.map { |c| Git::Object::Commit.new(@base, c['sha'], c) }
       end
       

@@ -47,6 +47,14 @@ class TestLib < Test::Unit::TestCase
 
     a = @lib.full_log_commits :count => 20
     assert_equal(20, a.size)
+
+    a = @lib.full_log_commits :count => 5, :all => true
+    assert_equal 5, a.size
+    assert_equal a[0]['commit'], '5e53019b3238362144c2766f02a2c00d91fcc023'
+    assert_equal a[1]['commit'], '935badc874edd62a8629aaf103418092c73f0a56'
+    assert_equal a[2]['commit'], '34a566d193dc4702f03149969a2aad1443231560'
+    assert_equal a[3]['commit'], 'a3db7143944dcfa006fefe7fb49c48793cb29ade'
+    assert_equal a[4]['commit'], '3a9f195756f5bd26b67c5e1fffd92d68d61be14e'
   end
   
   def test_revparse

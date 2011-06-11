@@ -51,13 +51,18 @@ class TestLog < Test::Unit::TestCase
     l = @git.log(5).author("lazySusan")
     assert_equal(0, l.size)
   end
-  
+
   def test_get_log_since_file    
     l = @git.log.object('example.txt')
     assert_equal(30, l.size)
   
     l = @git.log.between('v2.5', 'test').path('example.txt')
     assert_equal(1, l.size)
+  end
+
+  def test_log_all
+    l = @git.log(100).all
+    assert_equal 71, l.size
   end
   
   def test_log_file_noexist
