@@ -1,5 +1,6 @@
 require 'tempfile'
 require 'shellwords'
+require 'open3'
 
 class String  # :nodoc:
   def shellescape
@@ -598,9 +599,9 @@ module Git
       command('pull', [remote, branch])
     end
     
-    def push(remote, branch = 'master', tags = false)
-      command('push', [remote, branch])
-      command('push', ['--tags', remote]) if tags
+    def push(remote, branch = 'master', tags = false, &block)
+      command('push', [remote, branch], &block)
+      command('push', ['--tags', remote], &block) if tags
     end
     
     def tag_sha(tag_name)
@@ -745,7 +746,7 @@ module Git
     
     def run_command(git_cmd, &block)
       if block_given?
-        IO.popen(git_cmd, &block)
+        Open3.popen3(git_cmd, &block)
       else
         `#{git_cmd}`.chomp
       end

@@ -105,9 +105,9 @@ class TestObject < Test::Unit::TestCase
     
     # make sure the block is called
     block_called = false
-    o.contents do |f|
+    o.contents do |stdin, stdout, stderr|
       block_called = true
-      assert_equal('replace with new text', f.read.chomp)
+      assert_equal('replace with new text', stdout.read.chomp)
     end
     
     assert(block_called)
