@@ -721,7 +721,7 @@ module Git
       path = @git_work_dir || @git_dir || @path
 
       opts = [opts].flatten.map {|s| escape(s) }.join(' ')
-      git_cmd = "git #{cmd} #{opts} #{redirect} 2>&1"
+      git_cmd = "git #{cmd} #{opts} #{redirect}"
 
       out = nil
       if chdir && (Dir.getwd != path)
@@ -748,6 +748,7 @@ module Git
       if block_given?
         Open3.popen3(git_cmd, &block)
       else
+        git_cmd = git_cmd+' 2>&1'
         `#{git_cmd}`.chomp
       end
     end
